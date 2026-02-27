@@ -3,7 +3,7 @@ volumes:
 
 services:
   postgres:
-    container_name: spring-class
+    container_name: spring-study
     image: postgres:17
     restart: unless-stopped
     ports:

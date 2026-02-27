@@ -1,6 +1,6 @@
 spring:
   application:
-    name: spring-boot-rest-class
+    name: spring-boot-rest-study
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_DATABASE}

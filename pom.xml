@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.tperons</groupId>
-	<artifactId>spring-boot-rest-class</artifactId>
+	<artifactId>spring-boot-rest-study</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>spring-boot-rest-class</name>
+	<name>spring-boot-rest-study</name>
 
 	<properties>
 		<java.version>25</java.version>
