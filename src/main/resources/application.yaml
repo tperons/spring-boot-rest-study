@@ -10,3 +10,6 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: false
+logging:
+  level:
+    "[com.tperons]": DEBUG
