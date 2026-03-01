@@ -7,8 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tperons.data.dto.PersonDTO;
 import com.tperons.entity.Person;
 import com.tperons.exception.ResourceNotFoundException;
+import com.tperons.mapper.ObjectMapper;
 import com.tperons.repository.PersonRepository;
 
 @Service
@@ -19,23 +21,25 @@ public class PersonService {
     @Autowired
     private PersonRepository repository;
 
-    public List<Person> findAll() {
+    public List<PersonDTO> findAll() {
         logger.info("Finding all People!");
-        return repository.findAll();
+        return ObjectMapper.parseListObjects(repository.findAll(), PersonDTO.class);
     }
 
-    public Person findById(Long id) {
+    public PersonDTO findById(Long id) {
         logger.info("Finding one Person!");
-        return repository.findById(id)
+        var entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
+        return ObjectMapper.parseObject(entity, PersonDTO.class);
     }
 
-    public Person create(Person obj) {
+    public PersonDTO create(PersonDTO obj) {
         logger.info("Creating one Person!");
-        return repository.save(obj);
+        var entity = ObjectMapper.parseObject(obj, Person.class);
+        return ObjectMapper.parseObject(repository.save(entity), PersonDTO.class);
     }
 
-    public Person update(Long id, Person obj) {
+    public PersonDTO update(Long id, PersonDTO obj) {
         logger.info("Updating one Person!");
         Person entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
@@ -43,7 +47,7 @@ public class PersonService {
         entity.setLastName(obj.getLastName());
         entity.setAddress(obj.getAddress());
         entity.setGender(obj.getGender());
-        return repository.save(entity);
+        return ObjectMapper.parseObject(repository.save(entity), PersonDTO.class);
     }
 
     public void delete(Long id) {
