@@ -28,9 +28,9 @@ public class PersonService {
 
     public List<PersonDTO> findAll() {
         logger.info("Finding all People!");
-        var person = ObjectMapper.parseListObjects(repository.findAll(), PersonDTO.class);
-        person.forEach(p -> addHateoasLinks(p));
-        return person;
+        var people = ObjectMapper.parseListObjects(repository.findAll(), PersonDTO.class);
+        people.forEach(p -> addHateoasLinks(p));
+        return people;
     }
 
     public PersonDTO findById(Long id) {

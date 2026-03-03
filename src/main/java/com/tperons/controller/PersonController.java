@@ -31,8 +31,8 @@ public class PersonController implements PersonControllerDocs {
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_YAML_VALUE })
     public ResponseEntity<List<PersonDTO>> findAll() {
-        List<PersonDTO> list = service.findAll();
-        return ResponseEntity.ok().body(list);
+        List<PersonDTO> people = service.findAll();
+        return ResponseEntity.ok().body(people);
     }
 
     @Override

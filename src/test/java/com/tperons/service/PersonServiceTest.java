@@ -50,8 +50,8 @@ public class PersonServiceTest {
 
     @Test
     void testFindAll() {
-        List<Person> list = input.mockEntityList();
-        when(repository.findAll()).thenReturn(list);
+        List<Person> mockedPeople = input.mockEntityList();
+        when(repository.findAll()).thenReturn(mockedPeople);
         List<PersonDTO> people = service.findAll();
 
         assertNotNull(people);
