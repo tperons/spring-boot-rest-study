@@ -17,9 +17,6 @@ public class PersonDTO extends RepresentationModel<PersonDTO> implements Seriali
     private String gender;
     private Boolean enabled;
 
-    public PersonDTO() {
-    }
-
     public PersonDTO(Long id, String firstName, String lastName, String address, String gender, Boolean enabled) {
         this.id = id;
         this.firstName = firstName;

@@ -44,12 +44,13 @@ public class MockPerson {
     }
 
     public PersonDTO mockDTO(Integer number) {
-        PersonDTO person = new PersonDTO();
-        person.setAddress("Address Test" + number);
-        person.setFirstName("First Name Test" + number);
-        person.setGender(((number % 2) == 0) ? "Male" : "Female");
-        person.setId(number.longValue());
-        person.setLastName("Last Name Test" + number);
+        PersonDTO person = new PersonDTO(
+                number.longValue(),
+                "First Name Test" + number,
+                "Last Name Test" + number,
+                "Address Test" + number,
+                ((number % 2) == 0) ? "Male" : "Female",
+                true);
         return person;
     }
 

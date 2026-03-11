@@ -41,12 +41,13 @@ public class XlsxImporter implements FileImporter {
     }
 
     private PersonDTO parseRowToPersonDto(Row row) {
-        PersonDTO person = new PersonDTO();
-        person.setFirstName(row.getCell(0).getStringCellValue());
-        person.setLastName(row.getCell(1).getStringCellValue());
-        person.setAddress(row.getCell(2).getStringCellValue());
-        person.setGender(row.getCell(3).getStringCellValue());
-        person.setEnabled(true);
+        PersonDTO person = new PersonDTO(
+                null,
+                row.getCell(0).getStringCellValue(),
+                row.getCell(1).getStringCellValue(),
+                row.getCell(2).getStringCellValue(),
+                row.getCell(3).getStringCellValue(),
+                true);
         return person;
     }
 
