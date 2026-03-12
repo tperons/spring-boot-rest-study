@@ -17,16 +17,16 @@ public class BookDTO extends RepresentationModel<BookDTO> implements Serializabl
     private LocalDate launchDate;
     private Double price;
 
+    public BookDTO() {
+
+    }
+
     public BookDTO(Long id, String title, String author, LocalDate launchDate, Double price) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.launchDate = launchDate;
         this.price = price;
-    }
-
-    public static long getSerialversionuid() {
-        return serialVersionUID;
     }
 
     public Long getId() {

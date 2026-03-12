@@ -1,12 +1,18 @@
 package com.tperons.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -34,16 +40,29 @@ public class Person implements Serializable {
     @Column(name = "enabled", nullable = false)
     private Boolean enabled;
 
+    @Column(name = "wikipedia_profile_url", length = 255)
+    private String profileUrl;
+
+    @Column(name = "photo_url", length = 255)
+    private String photoUrl;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "tb_person_book", joinColumns = @JoinColumn(name = "person_id"), inverseJoinColumns = @JoinColumn(name = "book_id"))
+    private List<Book> books = new ArrayList<>();
+
     protected Person() {
     }
 
-    public Person(Long id, String firstName, String lastName, String address, String gender, Boolean enabled) {
+    public Person(Long id, String firstName, String lastName, String address, String gender, Boolean enabled,
+            String profileUrl, String photoUrl) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.gender = gender;
         this.enabled = enabled;
+        this.profileUrl = profileUrl;
+        this.photoUrl = photoUrl;
     }
 
     public Long getId() {
@@ -92,6 +111,26 @@ public class Person implements Serializable {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getProfileUrl() {
+        return profileUrl;
+    }
+
+    public void setProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public List<Book> getBooks() {
+        return books;
     }
 
     @Override

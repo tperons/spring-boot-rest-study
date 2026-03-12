@@ -21,7 +21,7 @@ import com.tperons.entity.Person;
 import com.tperons.exception.BadRequestException;
 import com.tperons.exception.RequiredObjectIsNullException;
 import com.tperons.exception.ResourceNotFoundException;
-import com.tperons.file.exporter.contract.FileExporter;
+import com.tperons.file.exporter.contract.PersonExporter;
 import com.tperons.file.exporter.factory.FileExporterFactory;
 import com.tperons.file.importer.contract.FileImporter;
 import com.tperons.file.importer.factory.FileImporterFactory;
@@ -72,16 +72,30 @@ public class PersonService {
         return dtoPage;
     }
 
+    public Resource exportPerson(Long id, String acceptHeader) {
+        logger.info("Exporting Data of one Person!");
+        var entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
+        var dto = mapper.toDTO(entity);
+        try {
+            PersonExporter exporter = exporterFactory.getExporter(acceptHeader);
+            return exporter.exportPerson(dto);
+        } catch (Exception e) {
+            logger.error("Error on file export");
+            throw new RuntimeException("File generate error.", e);
+        }
+    }
+
     public Resource exportPage(Pageable pageable, String acceptHeader) {
         logger.info("Finding all People!");
         Page<Person> personPage = repository.findAll(pageable);
         List<PersonDTO> dtoList = personPage.getContent().stream().map(p -> mapper.toDTO(p)).toList();
         try {
-            FileExporter exporter = exporterFactory.getExporter(acceptHeader);
-            return exporter.exportFile(dtoList);
+            PersonExporter exporter = exporterFactory.getExporter(acceptHeader);
+            return exporter.exportPeople(dtoList);
         } catch (Exception e) {
             logger.error("Error on file export");
-            throw new RuntimeException("File generate error.");
+            throw new RuntimeException("File generate error.", e);
         }
     }
 

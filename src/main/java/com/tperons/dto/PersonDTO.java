@@ -1,9 +1,13 @@
 package com.tperons.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Relation(collectionRelation = "people")
 public class PersonDTO extends RepresentationModel<PersonDTO> implements Serializable {
@@ -16,6 +20,15 @@ public class PersonDTO extends RepresentationModel<PersonDTO> implements Seriali
     private String address;
     private String gender;
     private Boolean enabled;
+    private String profileUrl;
+    private String photoUrl;
+
+    @JsonIgnore
+    private List<BookDTO> books = new ArrayList<>();
+
+    public PersonDTO() {
+
+    }
 
     public PersonDTO(Long id, String firstName, String lastName, String address, String gender, Boolean enabled) {
         this.id = id;
@@ -72,6 +85,35 @@ public class PersonDTO extends RepresentationModel<PersonDTO> implements Seriali
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    @JsonIgnore
+    public String getName() {
+        return (firstName != null ? firstName : "") + (lastName != null ? " " + lastName : "");
+    }
+
+    public String getProfileUrl() {
+        return profileUrl;
+    }
+
+    public void setProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public List<BookDTO> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<BookDTO> books) {
+        this.books = books;
     }
 
     @Override

@@ -12,13 +12,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import com.tperons.dto.PersonDTO;
-import com.tperons.file.exporter.contract.FileExporter;
+import com.tperons.file.exporter.contract.PersonExporter;
 
 @Component
-public class CsvExporter implements FileExporter {
+public class CsvExporter implements PersonExporter {
 
     @Override
-    public Resource exportFile(List<PersonDTO> people) throws Exception {
+    public Resource exportPeople(List<PersonDTO> people) throws Exception {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         OutputStreamWriter writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
         CSVFormat csvFormat = CSVFormat.Builder
@@ -39,6 +39,11 @@ public class CsvExporter implements FileExporter {
             }
         }
         return new ByteArrayResource(outputStream.toByteArray());
+    }
+
+    @Override
+    public Resource exportPerson(PersonDTO person) throws Exception {
+        return null;
     }
 
 }

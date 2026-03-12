@@ -16,13 +16,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import com.tperons.dto.PersonDTO;
-import com.tperons.file.exporter.contract.FileExporter;
+import com.tperons.file.exporter.contract.PersonExporter;
 
 @Component
-public class XlsxExporter implements FileExporter {
+public class XlsxExporter implements PersonExporter {
 
     @Override
-    public Resource exportFile(List<PersonDTO> people) throws Exception {
+    public Resource exportPeople(List<PersonDTO> people) throws Exception {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("People");
             Row headeRow = sheet.createRow(0);
@@ -59,6 +59,11 @@ public class XlsxExporter implements FileExporter {
         style.setFont(font);
         style.setAlignment(HorizontalAlignment.CENTER);
         return style;
+    }
+
+    @Override
+    public Resource exportPerson(PersonDTO person) throws Exception {
+        return null;
     }
 
 }

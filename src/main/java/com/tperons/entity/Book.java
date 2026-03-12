@@ -20,7 +20,7 @@ public class Book implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title", nullable = false, length = 256)
+    @Column(name = "title", nullable = false, length = 255)
     private String title;
 
     @Column(name = "author", nullable = false, length = 128)
@@ -41,10 +41,6 @@ public class Book implements Serializable {
         this.author = author;
         this.launchDate = launchDate;
         this.price = price;
-    }
-
-    public static long getSerialversionuid() {
-        return serialVersionUID;
     }
 
     public Long getId() {

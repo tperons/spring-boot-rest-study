@@ -2,6 +2,7 @@ package com.tperons.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -81,7 +82,18 @@ public class PersonController implements PersonControllerDocs {
     }
 
     @Override
-    @GetMapping(value = "/export", produces = { MediaTypes.APPLICATION_XLSX_VALUE, MediaTypes.APPLICATION_CSV_VALUE })
+    @GetMapping(value = "/export/{id}", produces = { MediaTypes.APPLICATION_PDF_VALUE })
+    public ResponseEntity<Resource> exportPdf(@PathVariable("id") Long id, HttpServletRequest request) {
+        String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
+        Resource fileResource = service.exportPerson(id, acceptHeader);
+        String contentType = acceptHeader != null ? acceptHeader : "application/octet-stream";
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=person.pdf")
+                .body(fileResource);
+    }
+
+    @Override
+    @GetMapping(value = "/export", produces = { MediaTypes.APPLICATION_CSV_VALUE, MediaTypes.APPLICATION_PDF_VALUE, MediaTypes.APPLICATION_XLSX_VALUE })
     public ResponseEntity<Resource> exportPage(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "12") Integer size,
@@ -91,8 +103,9 @@ public class PersonController implements PersonControllerDocs {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "firstName"));
         String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
         Resource fileResource = service.exportPage(pageable, acceptHeader);
+        Map<String, String> extensionMap = Map.of(MediaTypes.APPLICATION_CSV_VALUE, ".csv", MediaTypes.APPLICATION_PDF_VALUE, ".pdf", MediaTypes.APPLICATION_XLSX_VALUE, ".xlsx");
+        String fileExtension = extensionMap.getOrDefault(acceptHeader, "");
         String contentType = acceptHeader != null ? acceptHeader : "application/octet-stream";
-        String fileExtension = MediaTypes.APPLICATION_CSV_VALUE.equalsIgnoreCase(acceptHeader) ? ".csv" : ".xlsx";
         String fileName = "people_exported_" + page + fileExtension;
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")

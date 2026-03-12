@@ -7,8 +7,9 @@ import org.springframework.stereotype.Component;
 
 import com.tperons.exception.BadRequestException;
 import com.tperons.file.exporter.MediaTypes;
-import com.tperons.file.exporter.contract.FileExporter;
+import com.tperons.file.exporter.contract.PersonExporter;
 import com.tperons.file.exporter.impl.CsvExporter;
+import com.tperons.file.exporter.impl.PdfExporter;
 import com.tperons.file.exporter.impl.XlsxExporter;
 
 @Component
@@ -22,12 +23,14 @@ public class FileExporterFactory {
         this.context = context;
     }
 
-    public FileExporter getExporter(String acceptHeader) throws Exception {
+    public PersonExporter getExporter(String acceptHeader) throws Exception {
         logger.info("Determining file exporter for Accept header: {}", acceptHeader);
         if (acceptHeader.equalsIgnoreCase(MediaTypes.APPLICATION_XLSX_VALUE)) {
             return context.getBean(XlsxExporter.class);
         } else if (acceptHeader.equalsIgnoreCase(MediaTypes.APPLICATION_CSV_VALUE)) {
             return context.getBean(CsvExporter.class);
+        } else if (acceptHeader.equalsIgnoreCase(MediaTypes.APPLICATION_PDF_VALUE)) {
+            return context.getBean(PdfExporter.class);
         } else {
             logger.error("Failed to determine exporter. Unsupported media type: {}", acceptHeader);
             throw new BadRequestException("Invalid file format!");
