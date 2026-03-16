@@ -1,30 +1,42 @@
 server:
-  port: 8888
+    port: 8888
 cors:
-  originPatterns: http://localhost:8080,http://localhost:3000,https://tiagoperon.com.br
+    originPatterns: http://localhost:8080,http://localhost:3000,https://tiagoperon.com.br
+email:
+    subject: "Default Subject"
+    message: "Default Message"
 file:
-  upload-dir: uploads
+    upload-dir: uploads
 spring:
-  application:
-    name: spring-boot-rest-study
-  datasource:
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: none
-    properties:
-      hibernate:
-        show-sql: false
-        open-in-view: false
-  servlet:
-    multipart:
-      enabled: true
-      file-size-threshold: 2KB
-      max-file-size: 256MB
-      max-request-size: 256MB
-  flyway:
-    enabled: true
+    application:
+        name: spring-boot-rest-study
+    datasource:
+        driver-class-name: org.postgresql.Driver
+    jpa:
+        hibernate:
+            ddl-auto: none
+        properties:
+            hibernate:
+                show-sql: false
+                open-in-view: false
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        username: ${EMAIL_USERNAME}
+        password: ${EMAIL_PASSWORD}
+        properties:
+            "[mail.smtp.auth]": true
+            "[mail.smtp.starttls.enabled]": true
+            "[mail.smtp.starttls.required]": true
+    servlet:
+        multipart:
+            enabled: true
+            file-size-threshold: 2KB
+            max-file-size: 256MB
+            max-request-size: 256MB
+    flyway:
+        enabled: true
 springdoc:
-  paths-to-match: /api/v1/**/**
-  swagger-ui:
-    use-root-path: true
+    paths-to-match: /api/v1/**/**
+    swagger-ui:
+        use-root-path: true

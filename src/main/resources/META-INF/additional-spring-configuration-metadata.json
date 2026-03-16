@@ -1,14 +1,24 @@
 {
-  "properties": [
-    {
-      "name": "cors.originPatterns",
-      "type": "java.lang.String",
-      "description": "Manually managed CORS settings."
-    },
-    {
-      "name": "file.upload-dir",
-      "type": "java.lang.String",
-      "description": "Manually managed file upload settings."
-    }
-  ]
+    "properties": [
+        {
+            "name": "cors.originPatterns",
+            "type": "java.lang.String",
+            "description": "Manually managed CORS settings."
+        },
+        {
+            "name": "file.upload-dir",
+            "type": "java.lang.String",
+            "description": "Manually managed file upload settings."
+        },
+        {
+            "name": "email.message",
+            "type": "java.lang.String",
+            "description": "Manually managed e-mail settings."
+        },
+        {
+            "name": "email.subject",
+            "type": "java.lang.String",
+            "description": "Manually managed e-mail settings."
+        }
+    ]
 }

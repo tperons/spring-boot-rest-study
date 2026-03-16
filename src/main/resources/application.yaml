@@ -1,34 +1,46 @@
 cors:
-  originPatterns: http://localhost:8080,http://localhost:3000
+    originPatterns: http://localhost:8080,http://localhost:3000
+email:
+    subject: "Default Subject"
+    message: "Default Message"
 file:
-  upload-dir: uploads
+    upload-dir: uploads
 logging:
-  level:
-    "[com.tperons]": DEBUG
+    level:
+        "[com.tperons]": DEBUG
 spring:
-  application:
-    name: spring-boot-rest-study
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-  flyway:
-    enabled: true
-    baseline-on-migrate: true
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    show-sql: false
-  servlet:
-    multipart:
-      enabled: true
-      file-size-threshold: 2KB
-      max-file-size: 256MB
-      max-request-size: 256MB
+    application:
+        name: spring-boot-rest-study
+    datasource:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
+        username: ${DB_USERNAME}
+        password: ${DB_PASSWORD}
+    flyway:
+        enabled: true
+        baseline-on-migrate: true
+    jpa:
+        hibernate:
+            ddl-auto: validate
+        show-sql: false
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        username: ${EMAIL_USERNAME}
+        password: ${EMAIL_PASSWORD}
+        properties:
+            "[mail.smtp.auth]": true
+            "[mail.smtp.starttls.enabled]": true
+            "[mail.smtp.starttls.required]": true
+    servlet:
+        multipart:
+            enabled: true
+            file-size-threshold: 2KB
+            max-file-size: 256MB
+            max-request-size: 256MB
 springdoc:
-  paths-to-match: /api/v1/**/**
-  swagger-ui:
-    operations-sorter: method
-    tags-sorter: alpha
-    use-root-path: true
+    paths-to-match: /api/v1/**/**
+    swagger-ui:
+        operations-sorter: method
+        tags-sorter: alpha
+        use-root-path: true
