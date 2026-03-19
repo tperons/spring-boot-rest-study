@@ -38,26 +38,6 @@ public class FileController implements FileControllerDocs {
     }
 
     @Override
-    @PostMapping(value = "/uploadFile")
-    public UploadFileResponseDTO uploadFile(@RequestParam("file") MultipartFile file) {
-        var fileName = fileStorageService.storeFile(file);
-        var fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/v1/file/downloadFile/")
-                .path(fileName).toUriString();
-        return new UploadFileResponseDTO(fileName, fileDownloadUri, file.getContentType(), file.getSize());
-    }
-
-    @Override
-    @PostMapping(value = "/uploadMultipleFile")
-    public List<UploadFileResponseDTO> uploadMultipleFile(@RequestParam("files") MultipartFile[] files) {
-        return Arrays
-                .asList(files)
-                .stream()
-                .map(file -> uploadFile(file))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     @GetMapping(value = "/downloadFile/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
         Resource resource = fileStorageService.loadFileAsResource(fileName);
@@ -78,6 +58,26 @@ public class FileController implements FileControllerDocs {
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
+    }
+
+    @Override
+    @PostMapping(value = "/uploadFile")
+    public UploadFileResponseDTO uploadFile(@RequestParam("file") MultipartFile file) {
+        var fileName = fileStorageService.storeFile(file);
+        var fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/v1/file/downloadFile/")
+                .path(fileName).toUriString();
+        return new UploadFileResponseDTO(fileName, fileDownloadUri, file.getContentType(), file.getSize());
+    }
+
+    @Override
+    @PostMapping(value = "/uploadMultipleFiles")
+    public List<UploadFileResponseDTO> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
+        return Arrays
+                .asList(files)
+                .stream()
+                .map(file -> uploadFile(file))
+                .collect(Collectors.toList());
     }
 
 }
