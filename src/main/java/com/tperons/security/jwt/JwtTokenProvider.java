@@ -54,8 +54,10 @@ public class JwtTokenProvider {
     public TokenDTO createAccessToken(String username, List<String> roles) {
         Instant now = Instant.now();
         Instant validity = now.plusMillis(validityInMillis);
+
         String accessToken = getAccessToken(username, roles, now, validity);
         String refreshToken = getRefreshToken(username, roles, now);
+
         return new TokenDTO(username, true, now, validity, accessToken, refreshToken);
     }
 
@@ -75,20 +77,24 @@ public class JwtTokenProvider {
 
         String username = decodedJWT.getSubject();
         List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
+
         return createAccessToken(username, roles);
     }
 
     public Authentication getAuthentication(String token) {
         DecodedJWT decodedJWT = decodedToken(token);
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(decodedJWT.getSubject());
+
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
+
         if (StringUtils.isNotBlank(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring("Bearer ".length());
         }
+
         return null;
     }
 
@@ -128,11 +134,8 @@ public class JwtTokenProvider {
 
     private DecodedJWT decodedToken(String token) {
         JWTVerifier verifier = JWT.require(algorithm).build();
+
         return verifier.verify(token);
-        // Algorithm alg = Algorithm.HMAC256(secretKey.getBytes());
-        // JWTVerifier verifier = JWT.require(alg).build();
-        // DecodedJWT decodedJWT = verifier.verify(token);
-        // return decodedJWT;
     }
 
 }

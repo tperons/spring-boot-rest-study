@@ -43,8 +43,17 @@ public class AdminSeeder implements ApplicationRunner {
             logger.info("Admin user already exists, skipping seed.");
             return;
         }
-        Permission adminPermission = permissionRepository.findByDescription("ADMIN").orElseThrow(() -> new IllegalStateException("ADMIN permission not found. Make sure migrations ran correctly."));
-        User admin = new User(ADMIN_USERNAME, passwordEncoder.encode(adminPassword), ADMIN_FULL_NAME, List.of(adminPermission));
+
+        Permission adminPermission = permissionRepository
+                .findByDescription("ADMIN")
+                .orElseThrow(() -> new IllegalStateException(
+                        "ADMIN permission not found. Make sure migrations ran correctly."));
+
+        User admin = new User(
+                ADMIN_USERNAME,
+                passwordEncoder.encode(adminPassword),
+                ADMIN_FULL_NAME, List.of(adminPermission));
+
         userRepository.save(admin);
         logger.info("Admin user created successfully. CHANGE THE PASSWORD IMMEDIATELY");
     }

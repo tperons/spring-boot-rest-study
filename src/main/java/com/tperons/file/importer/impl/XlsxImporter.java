@@ -22,8 +22,10 @@ public class XlsxImporter implements FileImporter {
         try (XSSFWorkbook workbook = new XSSFWorkbook(inputStream)) {
             XSSFSheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.iterator();
+
             if (rowIterator.hasNext())
                 rowIterator.next();
+
             return parseRowToPersonDtoList(rowIterator);
         }
 
@@ -31,12 +33,14 @@ public class XlsxImporter implements FileImporter {
 
     private List<PersonDTO> parseRowToPersonDtoList(Iterator<Row> rowIterator) {
         List<PersonDTO> people = new ArrayList<>();
+
         while (rowIterator.hasNext()) {
             Row row = rowIterator.next();
             if (isRowValid(row)) {
                 people.add(parseRowToPersonDto(row));
             }
         }
+
         return people;
     }
 
@@ -48,6 +52,7 @@ public class XlsxImporter implements FileImporter {
                 row.getCell(2).getStringCellValue(),
                 row.getCell(3).getStringCellValue(),
                 true);
+
         return person;
     }
 

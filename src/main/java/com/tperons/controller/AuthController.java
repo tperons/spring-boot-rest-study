@@ -35,11 +35,13 @@ public class AuthController implements AuthControllerDocs {
     @Override
     @PostMapping(value = "/signin")
     public ResponseEntity<?> signin(@RequestBody AccountCredentialsDTO credentialsDTO) {
-        if (credentialsDTO == null || StringUtils.isBlank(credentialsDTO.getPassword()) || StringUtils.isBlank(credentialsDTO.getUsername())) {
+        if (credentialsDTO == null || StringUtils.isBlank(credentialsDTO.getPassword())
+                || StringUtils.isBlank(credentialsDTO.getUsername())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
         }
 
         var token = authService.signIn(credentialsDTO);
+
         if (token == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
         }
@@ -55,6 +57,7 @@ public class AuthController implements AuthControllerDocs {
         }
 
         var token = authService.refreshToken(refreshToken);
+
         if (token == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
         }

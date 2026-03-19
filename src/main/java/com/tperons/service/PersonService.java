@@ -42,7 +42,10 @@ public class PersonService {
     private final FileImporterFactory fileImporterFactory;
     private final FileExporterFactory fileExporterFactory;
 
-    public PersonService(PersonRepository personRepository, PersonMapper personMapper, FileImporterFactory fileImporterFactory,
+    public PersonService(
+            PersonRepository personRepository,
+            PersonMapper personMapper,
+            FileImporterFactory fileImporterFactory,
             FileExporterFactory fileExporterFactory) {
         this.personRepository = personRepository;
         this.personMapper = personMapper;
@@ -52,18 +55,24 @@ public class PersonService {
 
     public Page<PersonDTO> findAll(Pageable pageable) {
         logger.info("Finding all people.");
+
         Page<Person> personPage = personRepository.findAll(pageable);
+
         Page<PersonDTO> dtoPage = personPage.map(p -> personMapper.toDTO(p));
         dtoPage.forEach(p -> addHateoasLinks(p));
+
         return dtoPage;
     }
 
     public PersonDTO findById(Long id) {
         logger.info("Finding one person.");
+
         var entity = personRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
+
         var dto = personMapper.toDTO(entity);
         addHateoasLinks(dto);
+
         return dto;
     }
 
@@ -114,17 +123,24 @@ public class PersonService {
 
     public List<PersonDTO> massCreation(MultipartFile file) {
         logger.info("Importing people from file.");
-        if (file.isEmpty())
+        if (file.isEmpty()) {
             throw new BadRequestException("Please set a valid file!");
+        }
+
         try (InputStream inputStream = file.getInputStream()) {
-            String fileName = Optional.ofNullable(file.getOriginalFilename())
+            String fileName = Optional
+                    .ofNullable(file.getOriginalFilename())
                     .orElseThrow(() -> new BadRequestException("File name cannot be null!"));
             FileImporter importer = this.fileImporterFactory.getImporter(fileName);
+
             List<PersonDTO> importedDtos = importer.importFile(inputStream);
             List<Person> entitiesToSave = personMapper.toEntityList(importedDtos);
+
             List<Person> savedEntities = personRepository.saveAll(entitiesToSave);
+
             List<PersonDTO> savedDtos = personMapper.toDTOList(savedEntities);
             savedDtos.forEach(dto -> addHateoasLinks(dto));
+
             return savedDtos;
         } catch (BadRequestException e) {
             throw e;
@@ -139,21 +155,29 @@ public class PersonService {
         if (obj == null)
             throw new RequiredObjectIsNullException();
         logger.info("Updating one person.");
-        Person entity = personRepository.findById(id)
+
+        Person entity = personRepository
+                .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
+
         entity.setFirstName(obj.getFirstName());
         entity.setLastName(obj.getLastName());
         entity.setAddress(obj.getAddress());
         entity.setGender(obj.getGender());
+
         var dto = personMapper.toDTO(personRepository.save(entity));
         addHateoasLinks(dto);
+
         return dto;
     }
 
     public void delete(Long id) {
         logger.info("Deleting one person.");
-        Person entity = personRepository.findById(id)
+
+        Person entity = personRepository
+                .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
+
         personRepository.delete(entity);
     }
 
@@ -162,10 +186,13 @@ public class PersonService {
         logger.info("Disabling one person.");
         personRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
         personRepository.disablePerson(id);
+
         var entity = personRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
+
         var dto = personMapper.toDTO(entity);
         addHateoasLinks(dto);
+
         return dto;
     }
 

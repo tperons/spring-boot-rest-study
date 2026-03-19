@@ -48,13 +48,15 @@ public class SecurityConfig {
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        PasswordEncoder argon2Encoder = new Argon2PasswordEncoder(saltLength, hashLength, parallelism, memory, iterations);
+        PasswordEncoder argon2Encoder = new Argon2PasswordEncoder(
+            saltLength, hashLength, parallelism, memory, iterations);
 
         Map<String, PasswordEncoder> encoders = new HashMap<>();
         encoders.put("argon2", argon2Encoder);
 
         DelegatingPasswordEncoder passwordEncoder = new DelegatingPasswordEncoder("argon2", encoders);
         passwordEncoder.setDefaultPasswordEncoderForMatches(argon2Encoder);
+
         return passwordEncoder;
     }
 

@@ -21,6 +21,7 @@ public class CsvExporter implements PersonExporter {
     public Resource exportPeople(List<PersonDTO> people) throws Exception {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         OutputStreamWriter writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
+
         CSVFormat csvFormat = CSVFormat.Builder
                 .create()
                 .setHeader("ID", "First Name", "Last Name", "Address", "Gender", "Enabled")
@@ -38,6 +39,7 @@ public class CsvExporter implements PersonExporter {
                         person.getEnabled());
             }
         }
+
         return new ByteArrayResource(outputStream.toByteArray());
     }
 

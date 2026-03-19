@@ -38,10 +38,14 @@ public class PdfExporter implements PersonExporter {
         if (inputStream == null) {
             throw new FileNotFoundException("Main report template not found: /templates/people.jrxml");
         }
+
         JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(people);
+
         Map<String, Object> parameters = new HashMap<>();
+
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
             return new ByteArrayResource(outputStream.toByteArray());

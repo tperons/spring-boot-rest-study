@@ -30,6 +30,7 @@ public class EmailSender {
 
     public void send(EmailConfig config, String to, String subject, String body, File attachment) {
         MimeMessage message = javaMailSender.createMimeMessage();
+
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(config.getUsername());
@@ -43,6 +44,7 @@ public class EmailSender {
 
             javaMailSender.send(message);
             logger.info("E-mail sent to {} with the subject '{}'", to, subject);
+
         } catch (MessagingException e) {
             throw new EmailException("Error sending the e-mail.", e);
         }
@@ -52,6 +54,7 @@ public class EmailSender {
         String toWithoutSpaces = to.replaceAll("\\s", "");
         StringTokenizer tokenizer = new StringTokenizer(toWithoutSpaces, ";");
         ArrayList<InternetAddress> recipientsList = new ArrayList<>();
+
         while (tokenizer.hasMoreElements()) {
             try {
                 recipientsList.add(new InternetAddress(tokenizer.nextElement().toString()));
@@ -59,6 +62,7 @@ public class EmailSender {
                 throw new EmailException("Error parsing e-mail request.", e);
             }
         }
+
         return recipientsList;
     }
 }

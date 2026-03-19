@@ -55,7 +55,9 @@ public class PersonController implements PersonControllerDocs {
             PagedResourcesAssembler<PersonDTO> assembler) {
         var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "firstName"));
+
         Page<PersonDTO> peoplePage = personService.findAll(pageable);
+
         return ResponseEntity.ok().body(assembler.toModel(peoplePage));
     }
 
@@ -76,8 +78,10 @@ public class PersonController implements PersonControllerDocs {
             PagedResourcesAssembler<PersonDTO> assembler) {
         var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "firstName"));
+
         Page<PersonDTO> peoplePage = personService.findByName(firstName, pageable);
         PagedModel<EntityModel<PersonDTO>> pagedModel = assembler.toModel(peoplePage);
+
         return ResponseEntity.ok().body(pagedModel);
     }
 
@@ -85,15 +89,20 @@ public class PersonController implements PersonControllerDocs {
     @GetMapping(value = "/export/{id}", produces = { MediaTypes.APPLICATION_PDF_VALUE })
     public ResponseEntity<Resource> exportPdf(@PathVariable("id") Long id, HttpServletRequest request) {
         String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
+
         Resource fileResource = personService.exportPerson(id, acceptHeader);
         String contentType = acceptHeader != null ? acceptHeader : "application/octet-stream";
-        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=person.pdf")
                 .body(fileResource);
     }
 
     @Override
-    @GetMapping(value = "/export", produces = { MediaTypes.APPLICATION_CSV_VALUE, MediaTypes.APPLICATION_PDF_VALUE, MediaTypes.APPLICATION_XLSX_VALUE })
+    @GetMapping(value = "/export", produces = { MediaTypes.APPLICATION_CSV_VALUE, MediaTypes.APPLICATION_PDF_VALUE,
+            MediaTypes.APPLICATION_XLSX_VALUE })
     public ResponseEntity<Resource> exportPage(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "12") Integer size,
@@ -102,12 +111,18 @@ public class PersonController implements PersonControllerDocs {
         var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "firstName"));
         String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
+
         Resource fileResource = personService.exportPage(pageable, acceptHeader);
-        Map<String, String> extensionMap = Map.of(MediaTypes.APPLICATION_CSV_VALUE, ".csv", MediaTypes.APPLICATION_PDF_VALUE, ".pdf", MediaTypes.APPLICATION_XLSX_VALUE, ".xlsx");
+
+        Map<String, String> extensionMap = Map.of(MediaTypes.APPLICATION_CSV_VALUE, ".csv",
+                MediaTypes.APPLICATION_PDF_VALUE, ".pdf", MediaTypes.APPLICATION_XLSX_VALUE, ".xlsx");
         String fileExtension = extensionMap.getOrDefault(acceptHeader, "");
         String contentType = acceptHeader != null ? acceptHeader : "application/octet-stream";
         String fileName = "people_exported_" + page + fileExtension;
-        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                 .body(fileResource);
     }
@@ -116,8 +131,12 @@ public class PersonController implements PersonControllerDocs {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PersonDTO> create(@RequestBody PersonDTO obj) {
         PersonDTO savedObj = personService.create(obj);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedObj.getId())
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}").buildAndExpand(savedObj.getId())
                 .toUri();
+
         return ResponseEntity.created(uri).body(savedObj);
     }
 
@@ -125,6 +144,7 @@ public class PersonController implements PersonControllerDocs {
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PersonDTO>> massCreation(@RequestParam("file") MultipartFile file) {
         List<PersonDTO> dtos = personService.massCreation(file);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(dtos);
     }
 
@@ -132,6 +152,7 @@ public class PersonController implements PersonControllerDocs {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PersonDTO> update(@PathVariable("id") Long id, @RequestBody PersonDTO obj) {
         PersonDTO updatedObj = personService.update(id, obj);
+
         return ResponseEntity.ok().body(updatedObj);
     }
 
@@ -139,6 +160,7 @@ public class PersonController implements PersonControllerDocs {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         personService.delete(id);
+
         return ResponseEntity.noContent().build();
     }
 
@@ -146,6 +168,7 @@ public class PersonController implements PersonControllerDocs {
     @PatchMapping(value = "/{id}/disable", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PersonDTO> disablePerson(@PathVariable("id") Long id) {
         PersonDTO obj = personService.disablePerson(id);
+
         return ResponseEntity.ok().body(obj);
     }
 

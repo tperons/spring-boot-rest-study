@@ -28,6 +28,7 @@ public class EmailController implements EmailControllerDocs {
     @PostMapping
     public ResponseEntity<String> sendEmail(@RequestBody EmailRequestDTO emailRequestDTO) {
         emailService.sendSimpleEmail(emailRequestDTO);
+
         return new ResponseEntity<>("Email sent successfully.", HttpStatus.OK);
     }
 
@@ -37,6 +38,7 @@ public class EmailController implements EmailControllerDocs {
             @RequestParam("emailRequest") String emailRequestJson,
             @RequestParam("attachment") MultipartFile attachment) {
         emailService.sendEmailWithAttachment(emailRequestJson, attachment);
+
         return new ResponseEntity<>("Email with attachment sent successfully.", HttpStatus.OK);
     }
 

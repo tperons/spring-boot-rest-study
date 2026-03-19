@@ -23,12 +23,15 @@ public class CsvImporter implements FileImporter {
                 .setSkipHeaderRecord(true)
                 .setIgnoreEmptyLines(true)
                 .setTrim(true).get();
+
         Iterable<CSVRecord> records = format.parse(new InputStreamReader(inputStream));
+
         return parseRecordsToPersonDTOs(records);
     }
 
     private List<PersonDTO> parseRecordsToPersonDTOs(Iterable<CSVRecord> records) {
         List<PersonDTO> people = new ArrayList<>();
+
         for (CSVRecord record : records) {
             PersonDTO person = new PersonDTO(
                     null,
@@ -39,6 +42,7 @@ public class CsvImporter implements FileImporter {
                     true);
             people.add(person);
         }
+
         return people;
     }
 

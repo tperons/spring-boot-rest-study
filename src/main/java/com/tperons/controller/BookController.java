@@ -47,6 +47,7 @@ public class BookController implements BookControllerDocs {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "title"));
 
         Page<BookDTO> booksPage = bookService.findAll(pageable);
+
         return ResponseEntity.ok().body(assembler.toModel(booksPage));
     }
 
@@ -54,6 +55,7 @@ public class BookController implements BookControllerDocs {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BookDTO> findById(@PathVariable("id") Long id) {
         BookDTO obj = bookService.findById(id);
+
         return ResponseEntity.ok().body(obj);
     }
 
@@ -69,7 +71,9 @@ public class BookController implements BookControllerDocs {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "title"));
 
         Page<BookDTO> bookPage = bookService.findByTitle(title, pageable);
+
         PagedModel<EntityModel<BookDTO>> pagedModel = assembler.toModel(bookPage);
+
         return ResponseEntity.ok().body(pagedModel);
     }
 
@@ -77,6 +81,7 @@ public class BookController implements BookControllerDocs {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BookDTO> update(@PathVariable("id") Long id, @RequestBody BookDTO obj) {
         BookDTO updatedObj = bookService.update(id, obj);
+
         return ResponseEntity.ok().body(updatedObj);
     }
 
@@ -84,8 +89,13 @@ public class BookController implements BookControllerDocs {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BookDTO> create(@RequestBody BookDTO obj) {
         BookDTO savedObj = bookService.create(obj);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedObj.getId())
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(savedObj.getId())
                 .toUri();
+
         return ResponseEntity.created(uri).body(savedObj);
     }
 
@@ -93,6 +103,7 @@ public class BookController implements BookControllerDocs {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         bookService.delete(id);
+
         return ResponseEntity.noContent().build();
     }
 
