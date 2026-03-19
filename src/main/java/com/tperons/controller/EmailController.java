@@ -18,17 +18,17 @@ import com.tperons.service.EmailService;
 @RequestMapping(value = "/api/v1/email")
 public class EmailController implements EmailControllerDocs {
 
-    private final EmailService service;
+    private final EmailService emailService;
 
-    public EmailController(EmailService service) {
-        this.service = service;
+    public EmailController(EmailService emailService) {
+        this.emailService = emailService;
     }
 
     @Override
     @PostMapping
     public ResponseEntity<String> sendEmail(@RequestBody EmailRequestDTO emailRequestDTO) {
-        service.sendSimpleEmail(emailRequestDTO);
-        return new ResponseEntity<>("e-Mail sent with success!", HttpStatus.OK);
+        emailService.sendSimpleEmail(emailRequestDTO);
+        return new ResponseEntity<>("Email sent successfully.", HttpStatus.OK);
     }
 
     @Override
@@ -36,8 +36,8 @@ public class EmailController implements EmailControllerDocs {
     public ResponseEntity<String> sendEmailWithAttachment(
             @RequestParam("emailRequest") String emailRequestJson,
             @RequestParam("attachment") MultipartFile attachment) {
-        service.sendEmailWithAttachment(emailRequestJson, attachment);
-        return new ResponseEntity<>("e-Mail with attachment sent with success!", HttpStatus.OK);
+        emailService.sendEmailWithAttachment(emailRequestJson, attachment);
+        return new ResponseEntity<>("Email with attachment sent successfully.", HttpStatus.OK);
     }
 
 }

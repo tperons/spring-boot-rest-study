@@ -1,12 +1,3 @@
--- CREATE TABLE public.tb_person_book (
---   person_id bigint NOT NULL,
---   book_id int NOT NULL,
---   PRIMARY KEY (person_id, book_id),
---   FOREIGN KEY (person_id) REFERENCES tb_person(id) ON DELETE CASCADE,
---   FOREIGN KEY (book_id) REFERENCES tb_book(id) ON DELETE CASCADE
--- );
-
-
 CREATE TABLE public.tb_person_book (
   person_id bigint NOT NULL,
   book_id bigint NOT NULL,

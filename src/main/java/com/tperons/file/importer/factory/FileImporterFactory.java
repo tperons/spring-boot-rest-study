@@ -13,20 +13,21 @@ import com.tperons.file.importer.impl.XlsxImporter;
 @Component
 public class FileImporterFactory {
 
-    private Logger logger = LoggerFactory.getLogger(FileImporterFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(FileImporterFactory.class);
 
-    private final ApplicationContext context;
+    private final ApplicationContext applicationContext;
 
-    public FileImporterFactory(ApplicationContext context) {
-        this.context = context;
+    public FileImporterFactory(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
     }
 
     public FileImporter getImporter(String fileName) throws Exception {
         logger.info("Determining file importer for file: {}", fileName);
-        if (fileName.endsWith(".xlsx")) {
-            return context.getBean(XlsxImporter.class);
-        } else if (fileName.endsWith(".csv")) {
-            return context.getBean(CsvImporter.class);
+        String lowerName = fileName.toLowerCase();
+        if (lowerName.endsWith(".xlsx")) {
+            return applicationContext.getBean(XlsxImporter.class);
+        } else if (lowerName.endsWith(".csv")) {
+            return applicationContext.getBean(CsvImporter.class);
         } else {
             logger.error("Failed to determine importer. Unsupported file extension for: {}", fileName);
             throw new BadRequestException("Invalid file format!");

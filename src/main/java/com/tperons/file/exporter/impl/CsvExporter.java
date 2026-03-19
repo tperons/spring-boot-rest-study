@@ -43,7 +43,7 @@ public class CsvExporter implements PersonExporter {
 
     @Override
     public Resource exportPerson(PersonDTO person) throws Exception {
-        return null;
+        throw new UnsupportedOperationException("Export single person to CSV is not supported.");
     }
 
 }

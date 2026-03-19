@@ -14,4 +14,8 @@ public class RequiredObjectIsNullException extends RuntimeException {
         super(message);
     }
 
+    public RequiredObjectIsNullException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }

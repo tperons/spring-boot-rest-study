@@ -4,6 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,7 @@ public class FileStorageService {
 
     private final Path fileStorageLocation;
 
-    private Logger logger = LoggerFactory.getLogger(FileStorageService.class);
+    private static final Logger logger = LoggerFactory.getLogger(FileStorageService.class);
 
     public FileStorageService(FileStorageConfig fileStorageConfig) {
         Path path = Paths.get(fileStorageConfig.getUploadDir()).toAbsolutePath().normalize();
@@ -32,26 +33,28 @@ public class FileStorageService {
             logger.info("Creating directories.");
             Files.createDirectories(this.fileStorageLocation);
         } catch (Exception e) {
-            logger.error("Could not create the directory where files will be stored!");
+            logger.error("Could not create the directory where files will be stored.");
             throw new FileStorageException("Could not create the directory where files will be stored!", e);
         }
     }
 
     public String storeFile(MultipartFile file) {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
 
         try {
-            if (fileName.contains("..")) {
-                logger.error("Filename contains a invalid path sequence " + fileName + ".");
-                throw new FileStorageException("Filename contains an invalid path sequence " + fileName + ".");
+            Path targetLocation = this.fileStorageLocation.resolve(fileName).normalize();
+
+            if (!targetLocation.startsWith(this.fileStorageLocation)) {
+                throw new FileStorageException("Cannot store file outside the upload directory.");
             }
-            logger.info("Saving file in disk.");
-            Path targetLocation = this.fileStorageLocation.resolve(fileName);
+
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             return fileName;
+        } catch (FileStorageException e) {
+            throw e;
         } catch (Exception e) {
-            logger.error("Could not store file " + fileName + ". Please try again.");
-            throw new FileStorageException("Could not store file " + fileName + ". Please try again.", e);
+            logger.error("Could not store file {}.", fileName);
+            throw new FileStorageException("Could not store file %s. Please try again.".formatted(fileName), e);
         }
     }
 
@@ -62,12 +65,12 @@ public class FileStorageService {
             if (resource.exists()) {
                 return resource;
             } else {
-                logger.error("File not found " + fileName + ".");
-                throw new FileNotFoundException("File not found " + fileName + ".");
+                logger.error("File not found: {}.", fileName);
+                throw new FileNotFoundException("File not found: %s.".formatted(fileName));
             }
         } catch (Exception e) {
-            logger.error("File not found " + fileName + ".");
-            throw new FileNotFoundException("File not found " + fileName + ".", e);
+            logger.error("File not found: {}.", fileName);
+            throw new FileNotFoundException("File not found: %s.".formatted(fileName), e);
         }
     }
 

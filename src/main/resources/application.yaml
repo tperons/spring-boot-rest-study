@@ -7,7 +7,22 @@ file:
     upload-dir: uploads
 logging:
     level:
-        "[com.tperons]": DEBUG
+        root: INFO
+        # root: TRACE
+security:
+    argon2:
+        salt-length: 16
+        hash-length: 32
+        parallelism: 1
+        memory: 65536
+        iterations: 3
+    jwt:
+        token:
+            secret-key: ${JWT_SECRET}
+            expire-lenght: ${JWT_EXPIRE}
+seed:
+    admin:
+        password: ${SEED_ADMIN_PASSWORD}
 spring:
     application:
         name: spring-boot-rest-study
@@ -39,7 +54,9 @@ spring:
             max-file-size: 256MB
             max-request-size: 256MB
 springdoc:
-    paths-to-match: /api/v1/**/**
+    paths-to-match:
+        - /api/v1/**/**
+        - /auth/**
     swagger-ui:
         operations-sorter: method
         tags-sorter: alpha

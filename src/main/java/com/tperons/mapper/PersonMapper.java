@@ -5,15 +5,12 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
-import org.mapstruct.factory.Mappers;
 
 import com.tperons.dto.PersonDTO;
 import com.tperons.entity.Person;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PersonMapper {
-
-    PersonMapper INSTANCE = Mappers.getMapper(PersonMapper.class);
 
     PersonDTO toDTO(Person person);
 

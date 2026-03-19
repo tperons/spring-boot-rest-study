@@ -15,22 +15,22 @@ import com.tperons.file.exporter.impl.XlsxExporter;
 @Component
 public class FileExporterFactory {
 
-    private Logger logger = LoggerFactory.getLogger(FileExporterFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(FileExporterFactory.class);
 
-    private final ApplicationContext context;
+    private final ApplicationContext applicationContext;
 
-    public FileExporterFactory(ApplicationContext context) {
-        this.context = context;
+    public FileExporterFactory(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
     }
 
     public PersonExporter getExporter(String acceptHeader) throws Exception {
         logger.info("Determining file exporter for Accept header: {}", acceptHeader);
         if (acceptHeader.equalsIgnoreCase(MediaTypes.APPLICATION_XLSX_VALUE)) {
-            return context.getBean(XlsxExporter.class);
+            return applicationContext.getBean(XlsxExporter.class);
         } else if (acceptHeader.equalsIgnoreCase(MediaTypes.APPLICATION_CSV_VALUE)) {
-            return context.getBean(CsvExporter.class);
+            return applicationContext.getBean(CsvExporter.class);
         } else if (acceptHeader.equalsIgnoreCase(MediaTypes.APPLICATION_PDF_VALUE)) {
-            return context.getBean(PdfExporter.class);
+            return applicationContext.getBean(PdfExporter.class);
         } else {
             logger.error("Failed to determine exporter. Unsupported media type: {}", acceptHeader);
             throw new BadRequestException("Invalid file format!");

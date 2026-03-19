@@ -20,37 +20,37 @@ import com.tperons.repository.BookRepository;
 @Service
 public class BookService {
 
-    private Logger logger = LoggerFactory.getLogger(BookService.class);
+    private static final Logger logger = LoggerFactory.getLogger(BookService.class);
 
-    private final BookRepository repository;
-    private final BookMapper mapper;
+    private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
 
-    public BookService(BookRepository repository, BookMapper mapper) {
-        this.repository = repository;
-        this.mapper = mapper;
+    public BookService(BookRepository bookRepository, BookMapper bookMapper) {
+        this.bookRepository = bookRepository;
+        this.bookMapper = bookMapper;
     }
 
     public Page<BookDTO> findAll(Pageable pageable) {
-        logger.info("Finding all Books!");
-        Page<Book> bookPage = repository.findAll(pageable);
-        Page<BookDTO> dtoPage = bookPage.map(b -> mapper.toDTO(b));
+        logger.info("Finding all books.");
+        Page<Book> bookPage = bookRepository.findAll(pageable);
+        Page<BookDTO> dtoPage = bookPage.map(b -> bookMapper.toDTO(b));
         dtoPage.forEach(b -> addHateoasLinks(b));
         return dtoPage;
     }
 
     public BookDTO findById(Long id) {
-        logger.info("Finding one Book!");
-        var entity = repository.findById(id)
+        logger.info("Finding one book.");
+        var entity = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
-        var dto = mapper.toDTO(entity);
+        var dto = bookMapper.toDTO(entity);
         addHateoasLinks(dto);
         return dto;
     }
 
     public Page<BookDTO> findByTitle(String title, Pageable pageable) {
-        logger.info("Finding Books by Title!");
-        Page<Book> bookPage = repository.findByTitle(title, pageable);
-        Page<BookDTO> dtoPage = bookPage.map(p -> mapper.toDTO(p));
+        logger.info("Finding books by title.");
+        Page<Book> bookPage = bookRepository.findByTitle(title, pageable);
+        Page<BookDTO> dtoPage = bookPage.map(p -> bookMapper.toDTO(p));
         dtoPage.forEach(p -> addHateoasLinks(p));
         return dtoPage;
     }
@@ -58,9 +58,9 @@ public class BookService {
     public BookDTO create(BookDTO obj) {
         if (obj == null)
             throw new RequiredObjectIsNullException();
-        logger.info("Creating one Book!");
-        var entity = mapper.toEntity(obj);
-        var dto = mapper.toDTO(repository.save(entity));
+        logger.info("Creating one book.");
+        var entity = bookMapper.toEntity(obj);
+        var dto = bookMapper.toDTO(bookRepository.save(entity));
         addHateoasLinks(dto);
         return dto;
     }
@@ -68,23 +68,23 @@ public class BookService {
     public BookDTO update(Long id, BookDTO obj) {
         if (obj == null)
             throw new RequiredObjectIsNullException();
-        logger.info("Updating one book!");
-        Book entity = repository.findById(id)
+        logger.info("Updating one book.");
+        Book entity = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
         entity.setTitle(obj.getTitle());
         entity.setAuthor(obj.getAuthor());
         entity.setLaunchDate(obj.getLaunchDate());
         entity.setPrice(obj.getPrice());
-        var dto = mapper.toDTO(repository.save(entity));
+        var dto = bookMapper.toDTO(bookRepository.save(entity));
         addHateoasLinks(dto);
         return dto;
     }
 
     public void delete(Long id) {
-        logger.info("Deleting one Book!");
-        Book entity = repository.findById(id)
+        logger.info("Deleting one book.");
+        Book entity = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
-        repository.delete(entity);
+        bookRepository.delete(entity);
     }
 
     private static void addHateoasLinks(BookDTO dto) {

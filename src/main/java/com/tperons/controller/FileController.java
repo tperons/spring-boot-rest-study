@@ -31,16 +31,16 @@ public class FileController implements FileControllerDocs {
 
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
-    private final FileStorageService service;
+    private final FileStorageService fileStorageService;
 
-    public FileController(FileStorageService service) {
-        this.service = service;
+    public FileController(FileStorageService fileStorageService) {
+        this.fileStorageService = fileStorageService;
     }
 
     @Override
     @PostMapping(value = "/uploadFile")
     public UploadFileResponseDTO uploadFile(@RequestParam("file") MultipartFile file) {
-        var fileName = service.storeFile(file);
+        var fileName = fileStorageService.storeFile(file);
         var fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/v1/file/downloadFile/")
                 .path(fileName).toUriString();
@@ -56,7 +56,7 @@ public class FileController implements FileControllerDocs {
     @Override
     @GetMapping(value = "/downloadFile/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
-        Resource resource = service.loadFileAsResource(fileName);
+        Resource resource = fileStorageService.loadFileAsResource(fileName);
         String contentType = null;
         try {
             contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());

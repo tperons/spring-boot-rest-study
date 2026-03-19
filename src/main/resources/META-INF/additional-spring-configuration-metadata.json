@@ -6,11 +6,6 @@
             "description": "Manually managed CORS settings."
         },
         {
-            "name": "file.upload-dir",
-            "type": "java.lang.String",
-            "description": "Manually managed file upload settings."
-        },
-        {
             "name": "email.message",
             "type": "java.lang.String",
             "description": "Manually managed e-mail settings."
@@ -19,6 +14,31 @@
             "name": "email.subject",
             "type": "java.lang.String",
             "description": "Manually managed e-mail settings."
+        },
+        {
+            "name": "file.upload-dir",
+            "type": "java.lang.String",
+            "description": "Manually managed file upload settings."
+        },
+        {
+            "name": "security.jwt.token.secret-key",
+            "type": "java.lang.String",
+            "description": ""
+        },
+        {
+            "name": "security.argon2",
+            "type": "java.lang.Mapping",
+            "description": ""
+        },
+        {
+            "name": "security.jwt.token.expire-lenght",
+            "type": "java.lang.String",
+            "description": ""
+        },
+        {
+            "name" : "seed.admin.password",
+            "type" : "java.lang.String",
+            "description": ""
         }
     ]
 }

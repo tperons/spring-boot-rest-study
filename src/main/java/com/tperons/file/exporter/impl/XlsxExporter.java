@@ -63,7 +63,7 @@ public class XlsxExporter implements PersonExporter {
 
     @Override
     public Resource exportPerson(PersonDTO person) throws Exception {
-        return null;
+        throw new UnsupportedOperationException("Export single person to XLSX is not supported.");
     }
 
 }

@@ -11,6 +11,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
 import com.tperons.config.EmailConfig;
+import com.tperons.exception.EmailException;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.AddressException;
@@ -20,15 +21,15 @@ import jakarta.mail.internet.MimeMessage;
 @Component
 public class EmailSender {
 
-    private final Logger logger = LoggerFactory.getLogger(EmailSender.class);
-    private final JavaMailSender mailSender;
+    private static final Logger logger = LoggerFactory.getLogger(EmailSender.class);
+    private final JavaMailSender javaMailSender;
 
-    public EmailSender(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
+    public EmailSender(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
     }
 
     public void send(EmailConfig config, String to, String subject, String body, File attachment) {
-        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessage message = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(config.getUsername());
@@ -40,10 +41,10 @@ public class EmailSender {
                 helper.addAttachment(attachment.getName(), attachment);
             }
 
-            mailSender.send(message);
+            javaMailSender.send(message);
             logger.info("E-mail sent to {} with the subject '{}'", to, subject);
         } catch (MessagingException e) {
-            throw new RuntimeException("Error sending the e-mail", e);
+            throw new EmailException("Error sending the e-mail.", e);
         }
     }
 
@@ -55,7 +56,7 @@ public class EmailSender {
             try {
                 recipientsList.add(new InternetAddress(tokenizer.nextElement().toString()));
             } catch (AddressException e) {
-                throw new RuntimeException(e);
+                throw new EmailException("Error parsing e-mail request.", e);
             }
         }
         return recipientsList;

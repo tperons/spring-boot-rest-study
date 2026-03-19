@@ -12,7 +12,14 @@ import com.tperons.mapper.PersonMapper;
 import com.tperons.unittests.mapper.mocks.MockPerson;
 
 public class ObjectMapperTests {
+
+    private final PersonMapper personMapper;
+
     MockPerson inputObject;
+
+    public ObjectMapperTests(PersonMapper personMapper) {
+        this.personMapper = personMapper;
+    }
 
     @BeforeEach
     public void setUp() {
@@ -21,7 +28,7 @@ public class ObjectMapperTests {
 
     @Test
     public void parseEntityToDTOTest() {
-        PersonDTO output = PersonMapper.INSTANCE.toDTO(inputObject.mockEntity());
+        PersonDTO output = personMapper.toDTO(inputObject.mockEntity());
         assertEquals(Long.valueOf(0L), output.getId());
         assertEquals("First Name Test0", output.getFirstName());
         assertEquals("Last Name Test0", output.getLastName());
@@ -31,7 +38,7 @@ public class ObjectMapperTests {
 
     @Test
     public void parseEntityListToDTOListTest() {
-        List<PersonDTO> outputPeople = PersonMapper.INSTANCE.toDTOList(inputObject.mockEntityList());
+        List<PersonDTO> outputPeople = personMapper.toDTOList(inputObject.mockEntityList());
         PersonDTO outputZero = outputPeople.get(0);
 
         assertEquals(Long.valueOf(0L), outputZero.getId());
@@ -59,7 +66,7 @@ public class ObjectMapperTests {
 
     @Test
     public void parseDTOToEntityTest() {
-        Person output = PersonMapper.INSTANCE.toEntity(inputObject.mockDTO());
+        Person output = personMapper.toEntity(inputObject.mockDTO());
         assertEquals(Long.valueOf(0L), output.getId());
         assertEquals("First Name Test0", output.getFirstName());
         assertEquals("Last Name Test0", output.getLastName());
@@ -69,7 +76,7 @@ public class ObjectMapperTests {
 
     @Test
     public void parserDTOListToEntityListTest() {
-        List<Person> outputPeople = PersonMapper.INSTANCE.toEntityList(inputObject.mockDTOList());
+        List<Person> outputPeople = personMapper.toEntityList(inputObject.mockDTOList());
         Person outputZero = outputPeople.get(0);
 
         assertEquals(Long.valueOf(0L), outputZero.getId());

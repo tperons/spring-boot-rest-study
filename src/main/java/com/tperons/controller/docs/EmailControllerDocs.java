@@ -19,13 +19,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
         @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content) })
 public interface EmailControllerDocs {
 
-    @Operation(summary = "Send an e-Mail", description = "Sends an e-mail by providing datails, subject and body.", tags = {
+    @Operation(summary = "Send an e-Mail", description = "Sends an e-mail by providing details, subject and body.", tags = {
             "People" }, responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = { @Content() }),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content) })
     ResponseEntity<String> sendEmail(EmailRequestDTO emailRequestDTO);
 
-    @Operation(summary = "Send an e-Mail with Attachment", description = "Sends an e-mail with attachment by providing datails, subject and body.", tags = {
+    @Operation(summary = "Send an e-Mail with Attachment", description = "Sends an e-mail with attachment by providing details, subject and body.", tags = {
             "People" }, responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = { @Content() }),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content) })

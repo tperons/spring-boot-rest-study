@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tperons.config.EmailConfig;
 import com.tperons.dto.request.EmailRequestDTO;
+import com.tperons.exception.EmailException;
 import com.tperons.mail.EmailSender;
 
 @Service
@@ -44,11 +45,11 @@ public class EmailService {
                     emailRequestDTO.getBody(),
                     tempFile);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error parsing e-mail request.", e);
+            throw new EmailException("Error parsing e-mail request.", e);
         } catch (IOException e) {
-            throw new RuntimeException("Error processing the attachment.", e);
+            throw new EmailException("Error processing the attachment.", e);
         } finally {
-            if (tempFile != null && tempFile.exists()) {
+            if (tempFile != null) {
                 tempFile.delete();
             }
         }

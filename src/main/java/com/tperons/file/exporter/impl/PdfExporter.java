@@ -12,6 +12,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import com.tperons.dto.PersonDTO;
+import com.tperons.exception.FileNotFoundException;
 import com.tperons.file.exporter.contract.PersonExporter;
 import com.tperons.service.QRCodeService;
 
@@ -35,7 +36,7 @@ public class PdfExporter implements PersonExporter {
     public Resource exportPeople(List<PersonDTO> people) throws Exception {
         InputStream inputStream = getClass().getResourceAsStream("/templates/people.jrxml");
         if (inputStream == null) {
-            throw new RuntimeException("Template file not found");
+            throw new FileNotFoundException("Main report template not found: /templates/people.jrxml");
         }
         JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(people);
@@ -51,12 +52,12 @@ public class PdfExporter implements PersonExporter {
     public Resource exportPerson(PersonDTO person) throws Exception {
         InputStream mainTemplateStream = getClass().getResourceAsStream("/templates/person.jrxml");
         if (mainTemplateStream == null) {
-            throw new RuntimeException("Template file not found");
+            throw new FileNotFoundException("Main report template not found: /templates/person.jrxml");
         }
 
         InputStream subReportStream = getClass().getResourceAsStream("/templates/books.jrxml");
         if (subReportStream == null) {
-            throw new RuntimeException("Template file not found");
+            throw new FileNotFoundException("Sub-report template not found: /templates/books.jrxml");
         }
 
         JasperReport mainReport = JasperCompileManager.compileReport(mainTemplateStream);

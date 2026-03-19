@@ -7,6 +7,11 @@ email:
     message: "Default Message"
 file:
     upload-dir: uploads
+security:
+    jwt:
+        token:
+            secret-key: ${JWT_SECRET}
+            expire-lenght: ${JWT_EXPIRE}
 spring:
     application:
         name: spring-boot-rest-study

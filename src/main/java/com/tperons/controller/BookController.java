@@ -30,10 +30,10 @@ import com.tperons.service.BookService;
 @RequestMapping(value = "/api/v1/book")
 public class BookController implements BookControllerDocs {
 
-    private final BookService service;
+    private final BookService bookService;
 
-    public BookController(BookService service) {
-        this.service = service;
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
     }
 
     @Override
@@ -45,14 +45,15 @@ public class BookController implements BookControllerDocs {
             PagedResourcesAssembler<BookDTO> assembler) {
         var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "title"));
-        Page<BookDTO> booksPage = service.findAll(pageable);
+
+        Page<BookDTO> booksPage = bookService.findAll(pageable);
         return ResponseEntity.ok().body(assembler.toModel(booksPage));
     }
 
     @Override
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BookDTO> findById(@PathVariable("id") Long id) {
-        BookDTO obj = service.findById(id);
+        BookDTO obj = bookService.findById(id);
         return ResponseEntity.ok().body(obj);
     }
 
@@ -66,7 +67,8 @@ public class BookController implements BookControllerDocs {
             PagedResourcesAssembler<BookDTO> assembler) {
         var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "title"));
-        Page<BookDTO> bookPage = service.findByTitle(title, pageable);
+
+        Page<BookDTO> bookPage = bookService.findByTitle(title, pageable);
         PagedModel<EntityModel<BookDTO>> pagedModel = assembler.toModel(bookPage);
         return ResponseEntity.ok().body(pagedModel);
     }
@@ -74,14 +76,14 @@ public class BookController implements BookControllerDocs {
     @Override
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BookDTO> update(@PathVariable("id") Long id, @RequestBody BookDTO obj) {
-        BookDTO updatedObj = service.update(id, obj);
+        BookDTO updatedObj = bookService.update(id, obj);
         return ResponseEntity.ok().body(updatedObj);
     }
 
     @Override
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BookDTO> create(@RequestBody BookDTO obj) {
-        BookDTO savedObj = service.create(obj);
+        BookDTO savedObj = bookService.create(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedObj.getId())
                 .toUri();
         return ResponseEntity.created(uri).body(savedObj);
@@ -90,7 +92,7 @@ public class BookController implements BookControllerDocs {
     @Override
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        service.delete(id);
+        bookService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
