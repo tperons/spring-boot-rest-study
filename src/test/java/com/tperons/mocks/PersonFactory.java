@@ -1,4 +1,4 @@
-package com.tperons.unittests.mapper.mocks;
+package com.tperons.mocks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import com.tperons.dto.PersonDTO;
 import com.tperons.entity.Person;
 
-public class MockPerson {
+public class PersonFactory {
 
     public Person mockEntity() {
         return mockEntity(0);

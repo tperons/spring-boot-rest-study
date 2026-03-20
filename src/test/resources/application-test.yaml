@@ -10,8 +10,11 @@ file:
 security:
     jwt:
         token:
-            secret-key: ${JWT_SECRET}
-            expire-lenght: ${JWT_EXPIRE}
+            secret-key: ${JWT_SECRET:GgNaO2}
+            expire-lenght: ${JWT_EXPIRE:3600000}
+seed:
+    admin:
+        password: ${SEED_ADMIN_PASSWORD:HioiGa0H}
 spring:
     application:
         name: spring-boot-rest-study
@@ -27,8 +30,8 @@ spring:
     mail:
         host: smtp.gmail.com
         port: 587
-        username: ${EMAIL_USERNAME}
-        password: ${EMAIL_PASSWORD}
+        username: ${EMAIL_USERNAME:email@email.com}
+        password: ${EMAIL_PASSWORD:QppGUGo6}
         properties:
             "[mail.smtp.auth]": true
             "[mail.smtp.starttls.enabled]": true

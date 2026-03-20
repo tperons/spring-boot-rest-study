@@ -34,15 +34,6 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public AccountCredentialsDTO create(AccountCredentialsDTO user) {
-        if (user == null)
-            throw new RequiredObjectIsNullException();
-        logger.info("Creating a new user.");
-        var entity = new User(user.getUsername(), passwordEncoder.encode(user.getPassword()), user.getFullName());
-        var dto = userRepository.save(entity);
-        return new AccountCredentialsDTO(dto.getUsername(), null, dto.getFullName());
-    }
-
     public ResponseEntity<TokenDTO> signIn(AccountCredentialsDTO credentials) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword()));
@@ -52,6 +43,15 @@ public class AuthService {
 
         var tokenResponse = jwtTokenProvider.createAccessToken(credentials.getUsername(), user.getRoles());
         return ResponseEntity.ok(tokenResponse);
+    }
+
+    public AccountCredentialsDTO create(AccountCredentialsDTO user) {
+        if (user == null)
+            throw new RequiredObjectIsNullException();
+        logger.info("Creating a new user.");
+        var entity = new User(user.getUsername(), passwordEncoder.encode(user.getPassword()), user.getFullName());
+        var dto = userRepository.save(entity);
+        return new AccountCredentialsDTO(dto.getUsername(), null, dto.getFullName());
     }
 
     public ResponseEntity<TokenDTO> refreshToken(String refreshToken) {

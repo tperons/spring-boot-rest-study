@@ -123,7 +123,7 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public void setUserName(String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 

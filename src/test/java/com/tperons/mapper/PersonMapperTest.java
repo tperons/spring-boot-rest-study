@@ -1,34 +1,36 @@
-package com.tperons.unittests.mapper;
+package com.tperons.mapper;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.tperons.dto.PersonDTO;
 import com.tperons.entity.Person;
-import com.tperons.mapper.PersonMapper;
-import com.tperons.unittests.mapper.mocks.MockPerson;
+import com.tperons.mocks.PersonFactory;
 
-public class ObjectMapperTests {
+@DisplayName("Person Mapper Unit Tests")
+public class PersonMapperTest {
 
-    private final PersonMapper personMapper;
-
-    MockPerson inputObject;
-
-    public ObjectMapperTests(PersonMapper personMapper) {
-        this.personMapper = personMapper;
-    }
+    private PersonFactory inputObject;
+    private PersonMapper personMapper;
 
     @BeforeEach
     public void setUp() {
-        inputObject = new MockPerson();
+        inputObject = new PersonFactory();
+        personMapper = new PersonMapperImpl();
     }
 
     @Test
-    public void parseEntityToDTOTest() {
-        PersonDTO output = personMapper.toDTO(inputObject.mockEntity());
+    @DisplayName("Should return a valid PersonDTO when parsing a valid Person entity")
+    void should_returnPersonDTO_when_parsingValidPersonEntity() {
+        Person entity = inputObject.mockEntity();
+
+        PersonDTO output = personMapper.toDTO(entity);
+
         assertEquals(Long.valueOf(0L), output.getId());
         assertEquals("First Name Test0", output.getFirstName());
         assertEquals("Last Name Test0", output.getLastName());
@@ -37,10 +39,13 @@ public class ObjectMapperTests {
     }
 
     @Test
-    public void parseEntityListToDTOListTest() {
-        List<PersonDTO> outputPeople = personMapper.toDTOList(inputObject.mockEntityList());
-        PersonDTO outputZero = outputPeople.get(0);
+    @DisplayName("Should return a valid list of PersonDTO when parsing a list of Person entities")
+    void should_returnPersonDTOList_when_parsingValidPersonEntityList() {
+        List<Person> entities = inputObject.mockEntityList();
 
+        List<PersonDTO> outputPeople = personMapper.toDTOList(entities);
+
+        PersonDTO outputZero = outputPeople.get(0);
         assertEquals(Long.valueOf(0L), outputZero.getId());
         assertEquals("First Name Test0", outputZero.getFirstName());
         assertEquals("Last Name Test0", outputZero.getLastName());
@@ -48,7 +53,6 @@ public class ObjectMapperTests {
         assertEquals("Male", outputZero.getGender());
 
         PersonDTO outputSeven = outputPeople.get(7);
-
         assertEquals(Long.valueOf(7L), outputSeven.getId());
         assertEquals("First Name Test7", outputSeven.getFirstName());
         assertEquals("Last Name Test7", outputSeven.getLastName());
@@ -56,7 +60,6 @@ public class ObjectMapperTests {
         assertEquals("Female", outputSeven.getGender());
 
         PersonDTO outputTwelve = outputPeople.get(12);
-
         assertEquals(Long.valueOf(12L), outputTwelve.getId());
         assertEquals("First Name Test12", outputTwelve.getFirstName());
         assertEquals("Last Name Test12", outputTwelve.getLastName());
@@ -65,8 +68,12 @@ public class ObjectMapperTests {
     }
 
     @Test
-    public void parseDTOToEntityTest() {
-        Person output = personMapper.toEntity(inputObject.mockDTO());
+    @DisplayName("Should return a valid Person entity when parsing a valid PersonDTO")
+    void should_returnPersonEntity_when_parsingValidPersonDTO() {
+        PersonDTO dto = inputObject.mockDTO();
+
+        Person output = personMapper.toEntity(dto);
+
         assertEquals(Long.valueOf(0L), output.getId());
         assertEquals("First Name Test0", output.getFirstName());
         assertEquals("Last Name Test0", output.getLastName());
@@ -75,10 +82,13 @@ public class ObjectMapperTests {
     }
 
     @Test
-    public void parserDTOListToEntityListTest() {
-        List<Person> outputPeople = personMapper.toEntityList(inputObject.mockDTOList());
-        Person outputZero = outputPeople.get(0);
+    @DisplayName("Should return a valid list of Person entities when parsing a list of PersonDTOs")
+    void should_returnPersonEntityList_when_parsingValidPersonDTOList() {
+        List<PersonDTO> dtos = inputObject.mockDTOList();
 
+        List<Person> outputPeople = personMapper.toEntityList(dtos);
+
+        Person outputZero = outputPeople.get(0);
         assertEquals(Long.valueOf(0L), outputZero.getId());
         assertEquals("First Name Test0", outputZero.getFirstName());
         assertEquals("Last Name Test0", outputZero.getLastName());
@@ -86,7 +96,6 @@ public class ObjectMapperTests {
         assertEquals("Male", outputZero.getGender());
 
         Person outputSeven = outputPeople.get(7);
-
         assertEquals(Long.valueOf(7L), outputSeven.getId());
         assertEquals("First Name Test7", outputSeven.getFirstName());
         assertEquals("Last Name Test7", outputSeven.getLastName());
@@ -94,7 +103,6 @@ public class ObjectMapperTests {
         assertEquals("Female", outputSeven.getGender());
 
         Person outputTwelve = outputPeople.get(12);
-
         assertEquals(Long.valueOf(12L), outputTwelve.getId());
         assertEquals("First Name Test12", outputTwelve.getFirstName());
         assertEquals("Last Name Test12", outputTwelve.getLastName());
