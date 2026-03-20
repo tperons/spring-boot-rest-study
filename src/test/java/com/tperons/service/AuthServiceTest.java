@@ -14,9 +14,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,9 +36,7 @@ import com.tperons.security.jwt.JwtTokenProvider;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Auth Service Tests")
-public class AuthServiceTest {
-
-    private AuthFactory inputObjects;
+class AuthServiceTest {
 
     @InjectMocks
     private AuthService authService;
@@ -57,23 +53,17 @@ public class AuthServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @BeforeEach
-    void setUp() {
-        inputObjects = new AuthFactory();
-    }
-
     @Test
-    @Order(1)
     @DisplayName("Should return a valid TokenDTO when login credentials are correct")
     void should_returnTokenDTO_when_signInWithValidCredentials() {
-        AccountCredentialsDTO accountCredentialsDTO = inputObjects.mockCredentials();
-        User mockUser = inputObjects.mockUserEntity();
-        TokenDTO mockToken = inputObjects.mockToken();
+        AccountCredentialsDTO credentials = AuthFactory.createMockCredentials();
+        User mockUser = AuthFactory.createMockUserEntity();
+        TokenDTO mockToken = AuthFactory.createMockToken();
 
         when(userRepository.findByUserName("admin")).thenReturn(Optional.of(mockUser));
         when(jwtTokenProvider.createAccessToken(eq("admin"), any())).thenReturn(mockToken);
 
-        ResponseEntity<TokenDTO> response = authService.signIn(accountCredentialsDTO);
+        ResponseEntity<TokenDTO> response = authService.signIn(credentials);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -85,39 +75,31 @@ public class AuthServiceTest {
     }
 
     @Test
-    @Order(2)
     @DisplayName("Should return a DTO with a null password when creating a new valid user")
     void should_returnCredentialsWithoutPassword_when_createWithValidData() {
-        AccountCredentialsDTO inputCredentialsDTO = inputObjects.mockCredentials();
-        User savedUser = inputObjects.mockUserEntity();
+        AccountCredentialsDTO inputCredentials = AuthFactory.createMockCredentials();
+        User savedUser = AuthFactory.createMockUserEntity();
 
-        when(passwordEncoder.encode("admin123")).thenReturn("encoded-password");
-
+        when(passwordEncoder.encode("password-0")).thenReturn("encoded-password-0");
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
 
-        AccountCredentialsDTO response = authService.create(inputCredentialsDTO);
+        AccountCredentialsDTO response = authService.create(inputCredentials);
 
         assertNotNull(response);
         assertEquals("admin", response.getUsername());
         assertEquals("Administrator", response.getFullName());
         assertNull(response.getPassword());
 
-        verify(passwordEncoder, times(1)).encode("admin123");
+        verify(passwordEncoder, times(1)).encode("password-0");
         verify(userRepository, times(1)).save(any(User.class));
     }
 
     @Test
-    @Order(3)
     @DisplayName("Should throw RequiredObjectIsNullException when trying to create a user with null input")
     void should_throwRequiredObjectIsNullException_when_createWithNullInput() {
-        AccountCredentialsDTO nullCredentials = null;
-
-        assertThrows(RequiredObjectIsNullException.class, () -> {
-            authService.create(nullCredentials);
-        });
+        assertThrows(RequiredObjectIsNullException.class, () -> authService.create(null));
 
         verify(passwordEncoder, never()).encode(anyString());
         verify(userRepository, never()).save(any(User.class));
     }
-
 }
