@@ -39,7 +39,7 @@ public class AdminSeeder implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        if (userRepository.findByUserName(ADMIN_USERNAME).isPresent()) {
+        if (userRepository.findByUsername(ADMIN_USERNAME).isPresent()) {
             logger.info("Admin user already exists, skipping seed.");
             return;
         }

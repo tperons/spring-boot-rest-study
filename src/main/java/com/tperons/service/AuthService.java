@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.tperons.dto.security.AccountCredentialsDTO;
 import com.tperons.dto.security.TokenDTO;
 import com.tperons.entity.User;
+import com.tperons.exception.ObjectAlreadyExistsException;
 import com.tperons.exception.RequiredObjectIsNullException;
 import com.tperons.repository.UserRepository;
 import com.tperons.security.jwt.JwtTokenProvider;
@@ -38,7 +39,7 @@ public class AuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword()));
 
-        var user = userRepository.findByUserName(credentials.getUsername()).orElseThrow(
+        var user = userRepository.findByUsername(credentials.getUsername()).orElseThrow(
                 () -> new UsernameNotFoundException("Username " + credentials.getUsername() + " not found!"));
 
         var tokenResponse = jwtTokenProvider.createAccessToken(credentials.getUsername(), user.getRoles());
@@ -48,6 +49,9 @@ public class AuthService {
     public AccountCredentialsDTO create(AccountCredentialsDTO user) {
         if (user == null)
             throw new RequiredObjectIsNullException();
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new ObjectAlreadyExistsException("There is already a user with this username!");
+        }
         logger.info("Creating a new user.");
         var entity = new User(user.getUsername(), passwordEncoder.encode(user.getPassword()), user.getFullName());
         var dto = userRepository.save(entity);
@@ -56,7 +60,7 @@ public class AuthService {
 
     public ResponseEntity<TokenDTO> refreshToken(String refreshToken) {
         TokenDTO token = jwtTokenProvider.refreshToken(refreshToken);
-        userRepository.findByUserName(token.getUsername())
+        userRepository.findByUsername(token.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found!"));
         return ResponseEntity.ok(token);
     }
