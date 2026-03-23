@@ -56,8 +56,9 @@ public class BookService {
     }
 
     public BookDTO create(BookDTO obj) {
-        if (obj == null)
+        if (obj == null) {
             throw new RequiredObjectIsNullException();
+        }
         logger.info("Creating one book.");
         var entity = bookMapper.toEntity(obj);
         var dto = bookMapper.toDTO(bookRepository.save(entity));
@@ -66,8 +67,9 @@ public class BookService {
     }
 
     public BookDTO update(Long id, BookDTO obj) {
-        if (obj == null)
+        if (obj == null) {
             throw new RequiredObjectIsNullException();
+        }
         logger.info("Updating one book.");
         Book entity = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));

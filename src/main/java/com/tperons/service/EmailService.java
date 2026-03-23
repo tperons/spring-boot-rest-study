@@ -18,12 +18,12 @@ public class EmailService {
 
     private final EmailSender emailSender;
     private final EmailConfig emailConfigs;
+    private final ObjectMapper objectMapper;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
-    public EmailService(EmailSender emailSender, EmailConfig emailConfigs) {
+    public EmailService(EmailSender emailSender, EmailConfig emailConfigs, ObjectMapper objectMapper) {
         this.emailSender = emailSender;
         this.emailConfigs = emailConfigs;
+        this.objectMapper = objectMapper;
     }
 
     public void sendSimpleEmail(EmailRequestDTO emailRequestDTO) {
