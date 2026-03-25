@@ -1,5 +1,5 @@
 cors:
-    originPatterns: http://localhost:8080,http://localhost:3000
+    originPatterns: ${CORS_ORIGIN_PATTERNS:}
 email:
     subject: "Default Subject"
     message: "Default Message"
@@ -23,6 +23,8 @@ security:
 seed:
     admin:
         password: ${SEED_ADMIN_PASSWORD}
+server:
+  port: 8080
 spring:
     application:
         name: spring-boot-rest-study
