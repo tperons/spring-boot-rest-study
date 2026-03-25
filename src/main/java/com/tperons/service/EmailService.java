@@ -3,6 +3,8 @@ package com.tperons.service;
 import java.io.File;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +18,9 @@ import com.tperons.mail.EmailSender;
 @Service
 public class EmailService {
 
+    private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
+
+
     private final EmailSender emailSender;
     private final EmailConfig emailConfigs;
     private final ObjectMapper objectMapper;
@@ -27,11 +32,13 @@ public class EmailService {
     }
 
     public void sendSimpleEmail(EmailRequestDTO emailRequestDTO) {
+        logger.info("Sending a simple email.");
         emailSender.send(emailConfigs, emailRequestDTO.getTo(), emailRequestDTO.getSubject(), emailRequestDTO.getBody(),
                 null);
     }
 
     public void sendEmailWithAttachment(String emailRequestJson, MultipartFile attachment) {
+        logger.info("Sending an email with attachment.");
         File tempFile = null;
         try {
             EmailRequestDTO emailRequestDTO = objectMapper.readValue(emailRequestJson, EmailRequestDTO.class);

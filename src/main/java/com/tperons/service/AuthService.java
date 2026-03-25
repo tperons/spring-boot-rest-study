@@ -36,6 +36,7 @@ public class AuthService {
     }
 
     public ResponseEntity<TokenDTO> signIn(AccountCredentialsDTO credentials) {
+        logger.info("Logging in.");
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword()));
 
@@ -59,6 +60,7 @@ public class AuthService {
     }
 
     public ResponseEntity<TokenDTO> refreshToken(String refreshToken) {
+        logger.info("Refreshing token.");
         TokenDTO token = jwtTokenProvider.refreshToken(refreshToken);
         userRepository.findByUsername(token.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found!"));
