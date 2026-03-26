@@ -35,8 +35,8 @@ jobs:
 
       - name: Push to Docker Hub Container Registry
         run: |
-          docker tag ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:latest ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:${{ github.run_id }}
+          docker tag ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:latest ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:${{ github.sha }}
           docker push ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:latest
-          docker push ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:${{ github.run_id }}
+          docker push ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:${{ github.sha }}
 
 
