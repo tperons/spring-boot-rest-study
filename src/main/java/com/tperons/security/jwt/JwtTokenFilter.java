@@ -22,7 +22,6 @@ public class JwtTokenFilter extends GenericFilterBean {
     private final JwtTokenProvider jwtTokenProvider;
     private final HandlerExceptionResolver exceptionResolver;
 
-    // Construtor recebe o resolver
     public JwtTokenFilter(JwtTokenProvider jwtTokenProvider, HandlerExceptionResolver exceptionResolver) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.exceptionResolver = exceptionResolver;
@@ -49,7 +48,6 @@ public class JwtTokenFilter extends GenericFilterBean {
 
         } catch (InvalidJwtAuthenticationException ex) {
             SecurityContextHolder.clearContext();
-            // A mágica acontece aqui: delegamos para o tratador global do Spring!
             exceptionResolver.resolveException(req, res, null, ex);
         }
     }

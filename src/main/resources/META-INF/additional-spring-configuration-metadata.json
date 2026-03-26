@@ -31,7 +31,12 @@
             "description": ""
         },
         {
-            "name": "security.jwt.token.expire-lenght",
+            "name": "security.jwt.token.expire-length",
+            "type": "java.lang.String",
+            "description": ""
+        },
+        {
+            "name": "security.jwt.token.refresh-expire-length",
             "type": "java.lang.String",
             "description": ""
         },

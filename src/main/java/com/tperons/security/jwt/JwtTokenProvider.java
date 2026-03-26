@@ -28,16 +28,19 @@ import jakarta.servlet.http.HttpServletRequest;
 public class JwtTokenProvider {
 
     private static final String CLAIM_TOKEN_TYPE = "token_type";
-    private static final String TYPE_ACCESS      = "access";
-    private static final String TYPE_REFRESH     = "refresh";
+    private static final String TYPE_ACCESS = "access";
+    private static final String TYPE_REFRESH = "refresh";
 
     private final UserDetailsService userDetailsService;
 
     @Value("${security.jwt.token.secret-key}")
     private String secretKey;
 
-    @Value("${security.jwt.token.expire-lenght}")
-    private long validityInMillis;
+    @Value("${security.jwt.token.expire-length}")
+    private long validityInSeconds;
+
+    @Value("${security.jwt.token.refresh-expire-length}")
+    private long refreshValidityInSeconds;
 
     private Algorithm algorithm;
 
@@ -53,7 +56,7 @@ public class JwtTokenProvider {
 
     public TokenDTO createAccessToken(String username, List<String> roles) {
         Instant now = Instant.now();
-        Instant validity = now.plusMillis(validityInMillis);
+        Instant validity = now.plusSeconds(validityInSeconds);
 
         String accessToken = getAccessToken(username, roles, now, validity);
         String refreshToken = getRefreshToken(username, roles, now);
@@ -121,7 +124,7 @@ public class JwtTokenProvider {
     }
 
     private String getRefreshToken(String username, List<String> roles, Instant now) {
-        Instant refreshTokenValidity = now.plusMillis(validityInMillis * 6);
+        Instant refreshTokenValidity = now.plusSeconds(refreshValidityInSeconds);
         return JWT
                 .create()
                 .withClaim("roles", roles)

@@ -19,7 +19,8 @@ security:
     jwt:
         token:
             secret-key: ${JWT_SECRET}
-            expire-lenght: ${JWT_EXPIRE}
+            expire-length: ${JWT_EXPIRE}
+            refresh-expire-length: ${JWT_REFRESH_EXPIRE}
 seed:
     admin:
         password: ${SEED_ADMIN_PASSWORD}
