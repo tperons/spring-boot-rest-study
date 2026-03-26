@@ -29,14 +29,17 @@ jobs:
         working-directory: ./
         run: mvn clean package
 
+      - name: Set Short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
       - name: Docker Build Image
         working-directory: ./
         run: docker build -t ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:latest .
 
       - name: Push to Docker Hub Container Registry
         run: |
-          docker tag ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:latest ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:${{ github.sha }}
+          docker tag ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:latest ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:${{ env.SHORT_SHA }}
           docker push ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:latest
-          docker push ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:${{ github.sha }}
+          docker push ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:${{ env.SHORT_SHA }}
 
 
