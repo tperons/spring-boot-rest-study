@@ -1,17 +1,16 @@
-server:
-    port: 8888
 cors:
     originPatterns: http://localhost:8080,http://localhost:3000,https://tiagoperon.com.br
 email:
     subject: "Default Subject"
     message: "Default Message"
 file:
-    upload-dir: uploads
+    upload-dir: ${java.io.tmpdir}/meu-projeto-uploads-test
 security:
     jwt:
         token:
             secret-key: ${JWT_SECRET:GgNaO2}
-            expire-lenght: ${JWT_EXPIRE:3600000}
+            expire-length: ${JWT_EXPIRE:3600000}
+            refresh-expire-length: ${JWT_REFRESH_EXPIRE}
 seed:
     admin:
         password: ${SEED_ADMIN_PASSWORD:HioiGa0H}

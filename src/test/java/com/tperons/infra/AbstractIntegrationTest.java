@@ -10,16 +10,18 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.lifecycle.Startables;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 
 @ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = AbstractIntegrationTest.Initializer.class)
-public class AbstractIntegrationTest {
+public abstract class AbstractIntegrationTest {
 
     protected static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
+        @Container
         private static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:17");
 
         private static void startContainers() {
