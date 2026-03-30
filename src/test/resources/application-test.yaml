@@ -10,7 +10,7 @@ security:
         token:
             secret-key: ${JWT_SECRET:GgNaO2}
             expire-length: ${JWT_EXPIRE:3600000}
-            refresh-expire-length: ${JWT_REFRESH_EXPIRE}
+            refresh-expire-length: ${JWT_REFRESH_EXPIRE:18000000}
 seed:
     admin:
         password: ${SEED_ADMIN_PASSWORD:HioiGa0H}
