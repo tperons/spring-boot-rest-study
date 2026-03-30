@@ -1,6 +1,6 @@
 services:
   api:
-    image: tperons/spring-study-api
+    image: tperons/spring-study-api:${APP_VERSION}
     container_name: spring-study-api
     build:
       context: .

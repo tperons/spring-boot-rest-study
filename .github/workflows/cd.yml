@@ -37,3 +37,19 @@ jobs:
 
           docker push ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:${{ github.ref_name }}
           docker push ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute commands via SSH on VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /root/apis/spring-study
+            echo "APP_VERSION=${{ github.ref_name }}" > .env
+            docker compose pull
+            docker compose up -d
