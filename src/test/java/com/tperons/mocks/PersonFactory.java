@@ -8,52 +8,63 @@ import com.tperons.entity.Person;
 
 public class PersonFactory {
 
-    public Person mockEntity() {
-        return mockEntity(0);
+    private static final int DEFAULT_MOCK_LIST_SIZE = 12;
+
+    private PersonFactory() {
     }
 
-    public PersonDTO mockDTO() {
-        return mockDTO(0);
+    public static Person createMockEntity() {
+        return createMockEntity(0);
     }
 
-    public List<Person> mockEntityList() {
+    public static PersonDTO createMockDTO() {
+        return createMockDTO(0);
+    }
+
+    public static List<Person> createMockEntityList() {
         List<Person> people = new ArrayList<>();
-        for (int i = 0; i < 14; i++) {
-            people.add(mockEntity(i));
+        for (int i = 0; i < DEFAULT_MOCK_LIST_SIZE; i++) {
+            people.add(createMockEntity(i));
         }
         return people;
     }
 
-    public List<PersonDTO> mockDTOList() {
+    public static List<PersonDTO> createMockDTOList() {
         List<PersonDTO> people = new ArrayList<>();
-        for (int i = 0; i < 14; i++) {
-            people.add(mockDTO(i));
+        for (int i = 0; i < DEFAULT_MOCK_LIST_SIZE; i++) {
+            people.add(createMockDTO(i));
         }
         return people;
     }
 
-    public Person mockEntity(Integer number) {
-        Person person = new Person(
-                number.longValue(),
-                "First Name Test" + number,
-                "Last Name Test" + number,
-                "Address Test" + number,
-                ((number % 2) == 0) ? "Male" : "Female",
-                true,
-                null,
-                null);
-        return person;
+    public static Person createMockEntity(int i) {
+        return new Person(
+                (long) i,
+                "First Name " + i,
+                "Last Name " + i,
+                "Address " + i,
+                resolveGender(i),
+                resolveEnabled(i),
+                "Profile Url " + i,
+                "Photo Url " + i);
     }
 
-    public PersonDTO mockDTO(Integer number) {
-        PersonDTO person = new PersonDTO(
-                number.longValue(),
-                "First Name Test" + number,
-                "Last Name Test" + number,
-                "Address Test" + number,
-                ((number % 2) == 0) ? "Male" : "Female",
-                true);
-        return person;
+    public static PersonDTO createMockDTO(int i) {
+        Person person = createMockEntity(i);
+        return new PersonDTO(
+                person.getId(),
+                person.getFirstName(),
+                person.getLastName(),
+                person.getAddress(),
+                person.getGender(),
+                person.getEnabled());
     }
 
+    private static String resolveGender(int i) {
+        return i % 2 == 0 ? "Male" : "Female";
+    }
+
+    private static Boolean resolveEnabled(int i) {
+        return i % 2 == 0;
+    }
 }
