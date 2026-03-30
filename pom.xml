@@ -12,7 +12,7 @@
     </parent>
     <groupId>com.tperons</groupId>
     <artifactId>spring-boot-rest-study</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <name>spring-boot-rest-study</name>
 
     <properties>
