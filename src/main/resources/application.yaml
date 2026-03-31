@@ -28,7 +28,7 @@ server:
   port: 8080
 spring:
     application:
-        name: spring-boot-rest-study
+        name: spring-rest-api
     config:
         import: optional:file:.env[.properties]
     datasource:

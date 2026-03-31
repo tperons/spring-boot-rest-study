@@ -1,1 +1,1 @@
-# spring-boot-rest-study
+# spring-rest-api

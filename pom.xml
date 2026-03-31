@@ -9,9 +9,9 @@
         <!-- lookup parent from repository -->
     </parent>
     <groupId>com.tperons</groupId>
-    <artifactId>spring-boot-rest-study</artifactId>
-    <version>1.0.1</version>
-    <name>spring-boot-rest-study</name>
+    <artifactId>spring-rest-api</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>spring-rest-api</name>
 
     <properties>
         <apache.poi.version>5.5.1</apache.poi.version>
