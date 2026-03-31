@@ -25,31 +25,33 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v4
         with:
-          username: ${{ vars.DOCKERHUB_USERNAME }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Docker Build Image
-        run: docker build -t ${{ vars.DOCKERHUB_USERNAME }}/spring-rest-api:latest .
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/spring-rest-api:latest .
 
       - name: Push to Docker Hub Container Registry
         run: |
-          docker tag ${{ vars.DOCKERHUB_USERNAME }}/spring-rest-api:latest ${{ vars.DOCKERHUB_USERNAME }}/spring-rest-api:${{ github.ref_name }}
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/spring-rest-api:latest ${{ secrets.DOCKERHUB_USERNAME }}/spring-rest-api:${{ github.ref_name }}
 
-          docker push ${{ vars.DOCKERHUB_USERNAME }}/spring-rest-api:${{ github.ref_name }}
-          docker push ${{ vars.DOCKERHUB_USERNAME }}/spring-rest-api:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/spring-rest-api:${{ github.ref_name }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/spring-rest-api:latest
 
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
       - name: Execute commands via SSH on VPS
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
+            set -e
             cd /root/apis/spring-rest-api
-            echo "APP_VERSION=${{ github.ref_name }}" >> .env
+            export APP_VERSION=${{ github.ref_name }}
             docker compose pull
-            docker compose up -d
+            docker compose up -d --remove-orphans
+            docker image prune -f
