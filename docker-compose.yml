@@ -1,7 +1,7 @@
 services:
   api:
-    image: tperons/spring-study-api:${APP_VERSION}
-    container_name: spring-study-api
+    image: tperons/spring-rest-api:${APP_VERSION}
+    container_name: spring-rest-api
     build:
       context: .
       dockerfile: Dockerfile

@@ -29,14 +29,14 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Docker Build Image
-        run: docker build -t ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:latest .
+        run: docker build -t ${{ vars.DOCKERHUB_USERNAME }}/spring-rest-api:latest .
 
       - name: Push to Docker Hub Container Registry
         run: |
-          docker tag ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:latest ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:${{ github.ref_name }}
+          docker tag ${{ vars.DOCKERHUB_USERNAME }}/spring-rest-api:latest ${{ vars.DOCKERHUB_USERNAME }}/spring-rest-api:${{ github.ref_name }}
 
-          docker push ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:${{ github.ref_name }}
-          docker push ${{ vars.DOCKERHUB_USERNAME }}/spring-study-api:latest
+          docker push ${{ vars.DOCKERHUB_USERNAME }}/spring-rest-api:${{ github.ref_name }}
+          docker push ${{ vars.DOCKERHUB_USERNAME }}/spring-rest-api:latest
 
   deploy:
     needs: build-and-push
@@ -49,7 +49,7 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd /root/apis/spring-study
+            cd /root/apis/spring-rest-api
             echo "APP_VERSION=${{ github.ref_name }}" >> .env
             docker compose pull
             docker compose up -d
